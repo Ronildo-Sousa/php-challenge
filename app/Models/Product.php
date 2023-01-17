@@ -37,4 +37,8 @@ class Product extends Model
         'main_category',
         'image_url'
     ];
+
+    protected $casts = [
+        'imported_t' => 'datetime'
+    ];
 }
