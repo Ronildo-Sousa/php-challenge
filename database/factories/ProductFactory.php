@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,11 @@ class ProductFactory extends Factory
     {
         return [
             'code' => fake()->numerify("#####"),
-            'status' => ['draft', 'trash', 'published'][rand(0, 2)],
+            'status' => [
+                ProductStatus::draft->value,
+                ProductStatus::published->value,
+                ProductStatus::trash->value,
+            ][rand(0, 2)],
             'imported_t' => now(),
             'url' => fake()->url(),
             'creator' => fake()->name(),
