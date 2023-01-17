@@ -20,8 +20,8 @@ return new class extends Migration
                 ProductStatus::draft->value,
                 ProductStatus::published->value,
                 ProductStatus::trash->value,
-            ]);
-            $table->timestamp('imported_t');
+            ])->default(ProductStatus::published->value);
+            $table->timestamp('imported_t')->default(now());
             $table->string('url');
             $table->string('creator');
             $table->integer('created_t');
