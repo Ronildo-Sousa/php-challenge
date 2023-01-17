@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductStatus;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,8 +66,42 @@ class ProductController extends Controller
         //
     }
 
-    public function destroy($id)
+    /**
+     * @OA\Delete(
+     *   tags={"Products"},
+     *   path="/api/products/{code}",
+     *   summary="Delete a product",
+     *   description="Marks a product as trash",
+     *   @OA\Parameter(
+     *     name="code",
+     *     description="product code",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *         type="integer"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *   ),
+     *   @OA\Response(
+     *     response=404, 
+     *     description="Not Found"
+     *   )
+     * )
+     */
+    public function destroy(int $code)
     {
-        //
+        $product = Product::query()->find($code);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $product->status = ProductStatus::trash->value;
+        $product->save();
+
+        return response()->json(['message' => 'product marks as trash'], Response::HTTP_OK);
     }
 }

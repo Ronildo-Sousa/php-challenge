@@ -47,6 +47,33 @@
                         "description": "Not Found"
                     }
                 }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "description": "Marks a product as trash",
+                "operationId": "6a4d2026c38bb1610409db25b01a1d9c",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "product code",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
             }
         }
     }
