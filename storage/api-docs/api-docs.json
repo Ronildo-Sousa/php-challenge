@@ -48,11 +48,110 @@
                     }
                 }
             },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Updates a product",
+                "description": "Updates a single product based on a code",
+                "operationId": "0f1e54a84587dee40efb8d8341a15536",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "product code",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "url": {
+                                        "type": "string"
+                                    },
+                                    "creator": {
+                                        "type": "string"
+                                    },
+                                    "product_name": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "string"
+                                    },
+                                    "brands": {
+                                        "type": "string"
+                                    },
+                                    "categories": {
+                                        "type": "string"
+                                    },
+                                    "labels": {
+                                        "type": "string"
+                                    },
+                                    "cities": {
+                                        "type": "string"
+                                    },
+                                    "purchase_places": {
+                                        "type": "string"
+                                    },
+                                    "stores": {
+                                        "type": "string"
+                                    },
+                                    "ingredients_text": {
+                                        "type": "string"
+                                    },
+                                    "traces": {
+                                        "type": "string"
+                                    },
+                                    "serving_size": {
+                                        "type": "string"
+                                    },
+                                    "serving_quantity": {
+                                        "type": "number"
+                                    },
+                                    "nutriscore_score": {
+                                        "type": "number"
+                                    },
+                                    "nutriscore_grade": {
+                                        "type": "string"
+                                    },
+                                    "main_category": {
+                                        "type": "string"
+                                    },
+                                    "image_url": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "Products"
                 ],
-                "summary": "Delete a product",
+                "summary": "Deletes a product",
                 "description": "Marks a product as trash",
                 "operationId": "6a4d2026c38bb1610409db25b01a1d9c",
                 "parameters": [
