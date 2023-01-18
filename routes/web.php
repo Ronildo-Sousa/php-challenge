@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\DowloadProductsJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    DowloadProductsJob::dispatch("https://challenges.coode.sh/food/data/json/products_01.json.gz", 'products_01.zip');
     return view('welcome');
 });
