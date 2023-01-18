@@ -2,6 +2,7 @@
 
 namespace App\Actions\Products;
 
+use App\Enums\ProductStatus;
 use App\Models\Product;
 
 class CreateProduct
@@ -15,7 +16,7 @@ class CreateProduct
         return Product::query()
             ->create([
                 'code' => $productData['code'],
-                'status' => $productData['status'],
+                'status' => $productData['status'] ?? ProductStatus::published->value,
                 'imported_t' => now(),
                 'url' => $productData['url'],
                 'creator' => $productData['creator'],
@@ -32,8 +33,8 @@ class CreateProduct
                 'ingredients_text' => $productData['ingredients_text'],
                 'traces' => $productData['traces'],
                 'serving_size' => $productData['serving_size'],
-                'serving_quantity' => $productData['serving_quantity'],
-                'nutriscore_score' => $productData['nutriscore_score'],
+                'serving_quantity' => (float)$productData['serving_quantity'],
+                'nutriscore_score' => (float)$productData['nutriscore_score'],
                 'nutriscore_grade' => $productData['nutriscore_grade'],
                 'main_category' => $productData['main_category'],
                 'image_url' => $productData['image_url'],
