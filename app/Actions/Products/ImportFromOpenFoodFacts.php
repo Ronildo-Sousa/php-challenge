@@ -22,7 +22,7 @@ class ImportFromOpenFoodFacts
 
             Bus::chain([
                 new DowloadProductsJob($streamPath, $fileName . '.zip'),
-                new ImportProductsJob(base_path($fileName . '.zip'))
+                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'))
             ])->dispatch();
         }
     }
