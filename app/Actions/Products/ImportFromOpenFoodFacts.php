@@ -4,6 +4,8 @@ namespace App\Actions\Products;
 
 use App\Jobs\DowloadProductsJob;
 use App\Jobs\ImportProductsJob;
+use App\Models\User;
+use App\Notifications\CronJobNotification;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
@@ -21,21 +23,32 @@ class ImportFromOpenFoodFacts
 
         $jobs = [];
         foreach ($this->fileNames as $fileName) {
-            $streamPath = $this->baseUrl . $fileName . '.json.gz';
+            $streamPath = $this->baseUrl . $fileName . '1.json.gz';
             $jobs[] = [
                 new DowloadProductsJob($streamPath, $fileName . '.zip'),
-                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'))
+                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '1.zip'))
             ];
         }
 
         Bus::batch($jobs)->name("Import-products")
             ->finally(function (Batch $batch) {
-                //enviar email para admins
-                info('success');
+                User::admin()
+                    ->each(
+                        fn ($user) => $user->notify(
+                            new CronJobNotification('Cron Job ' . $batch->name . 'executed successfully')
+                        )
+                    );
             })
             ->catch(function (Batch $batch, Throwable $e) {
-                //enviar email para admins
-                info($e->getMessage());
+                User::admin()
+                    ->each(
+                        fn ($user) => $user->notify(
+                            new CronJobNotification(
+                                'Error on Cron Job ' . $batch->name,
+                                $e->getMessage()
+                            )
+                        )
+                    );
             })->dispatch();
     }
 
