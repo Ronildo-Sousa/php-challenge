@@ -2,6 +2,8 @@
 
 ### Esta aplicação é uma API REST que utiliza dados do projeto Open Food Facts para popular sua base de dados
 
+[disponível aqui](https://challenge-php.herokuapp.com/api/products)
+
 <img src="public/challenge.gif" style="width: 50%;">
 
 
