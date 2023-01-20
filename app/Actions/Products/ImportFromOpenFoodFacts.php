@@ -4,9 +4,11 @@ namespace App\Actions\Products;
 
 use App\Jobs\DowloadProductsJob;
 use App\Jobs\ImportProductsJob;
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Throwable;
 
 class ImportFromOpenFoodFacts
 {
@@ -17,13 +19,18 @@ class ImportFromOpenFoodFacts
     {
         $this->getFileNames();
 
-        foreach ($this->fileNames as $fileName) {
+        foreach ($this->fileNames as $key => $fileName) {
             $streamPath = $this->baseUrl . $fileName . '.json.gz';
 
-            Bus::chain([
-                new DowloadProductsJob($streamPath, $fileName . '.zip'),
-                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'))
-            ])->dispatch();
+            Bus::batch([
+                [
+                    new DowloadProductsJob($streamPath, $fileName . '.zip'),
+                    new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'), 10)
+                ]
+            ])->name("#$key Import-product")
+                ->catch(function (Batch $batch, Throwable $e) {
+                    // disparar email
+                })->dispatch();
         }
     }
 

@@ -2,25 +2,25 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 
 class ImportProductsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private Collection $products;
+    private string $Importedfilename;
 
     public function __construct(
         public string $zipFilePath,
-        public int $productsAmount = 100
+        public int $productsAmount = 100,
     ) {
-        $this->products = collect([]);
+        $this->Importedfilename = base_path('/Cron/Products/importedProducts.json');
     }
 
     public function handle()
@@ -35,22 +35,44 @@ class ImportProductsJob implements ShouldQueue
                 break;
             }
 
+            $importedCodes = $this->getImportedCodes();
             $product = json_decode($productsFile[$i]);
             $product->code = str_replace('"', '', $product->code);
-            $isImported = $this->isImported($product->code);
+            $isImported = $importedCodes->contains('code', $product->code);
 
             if (!$isImported) {
                 ImportSingleProductJob::dispatch(collect($product)->toArray());
 
-                $this->products->add($product->code);
+                $this->saveProductCode(['code' => $product->code]);
                 $numProducts++;
             }
             $i++;
         }
     }
 
-    public function isImported(string $code)
+    public function getImportedCodes()
     {
-        return $this->products->contains($code);
+        if (!file_exists($this->Importedfilename)) {
+            file_put_contents($this->Importedfilename, '[]');
+            return false;
+        }
+        $rawCodes = file_get_contents($this->Importedfilename);
+        $codes = json_decode($rawCodes);
+
+        return collect($codes);
+    }
+
+    public function saveProductCode(array $data)
+    {
+        if (!file_exists($this->Importedfilename)) {
+            file_put_contents($this->Importedfilename, '[' . json_encode($data) . ']');
+            return;
+        }
+
+        $currentFile = file_get_contents($this->Importedfilename);
+        $content = json_decode($currentFile);
+        $content[] = $data;
+
+        file_put_contents($this->Importedfilename, json_encode($content));
     }
 }
