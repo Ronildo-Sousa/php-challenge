@@ -1,6 +1,9 @@
 # PHP Challenge 20200916
 
-Esta aplicação é uma API REST que utiliza dados do projeto Open Food Facts para popular sua base de dados
+### Esta aplicação é uma API REST que utiliza dados do projeto Open Food Facts para popular sua base de dados
+
+<img src="public/challenge.gif" style="width: 50%;">
+
 
 ## Instalação e configuração da API
 
@@ -41,11 +44,11 @@ Execute as migrations e seeders
 
 ## Endpoints
 
-Acesse a [documentação](http://localhost/api/documentation) para mais detalhes.
+Acesse a [documentação](https://documenter.getpostman.com/view/15881488/2s8ZDYX1ok) para mais detalhes.
 
 Método   | URI
 --------- | ------
-GET | localhost/api/products
-GET | localhost/api/products/{code}
-PUT | localhost/api/products/{code}
-DELETE | localhost/api/products/{code}
+GET | /api/products
+GET | /api/products/{code}
+PUT | /api/products/{code}
+DELETE | /api/products/{code}
