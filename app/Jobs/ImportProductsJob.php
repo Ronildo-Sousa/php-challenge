@@ -26,7 +26,6 @@ class ImportProductsJob implements ShouldQueue
     public function handle()
     {
         $productsFile = gzfile($this->zipFilePath);
-
         $numProducts = 0;
         $i = 0;
 
@@ -35,22 +34,22 @@ class ImportProductsJob implements ShouldQueue
                 break;
             }
 
-            $importedCodes = $this->getImportedCodes();
             $product = json_decode($productsFile[$i]);
             $product->code = str_replace('"', '', $product->code);
-            $isImported = $importedCodes->contains('code', $product->code);
+            $isImported = $this->isImportedCode($product->code);
 
             if (!$isImported) {
+                $this->saveProductCode(['code' => $product->code]);
+
                 ImportSingleProductJob::dispatch(collect($product)->toArray());
 
-                $this->saveProductCode(['code' => $product->code]);
                 $numProducts++;
             }
             $i++;
         }
     }
 
-    public function getImportedCodes()
+    public function isImportedCode(string $code)
     {
         if (!file_exists($this->Importedfilename)) {
             file_put_contents($this->Importedfilename, '[]');
@@ -59,7 +58,7 @@ class ImportProductsJob implements ShouldQueue
         $rawCodes = file_get_contents($this->Importedfilename);
         $codes = json_decode($rawCodes);
 
-        return collect($codes);
+        return collect($codes)->contains('code', $code);
     }
 
     public function saveProductCode(array $data)

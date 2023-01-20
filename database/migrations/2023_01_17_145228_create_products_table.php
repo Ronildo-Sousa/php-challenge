@@ -22,14 +22,14 @@ return new class extends Migration
                 ProductStatus::trash->value,
             ])->default(ProductStatus::published->value);
             $table->timestamp('imported_t')->default(now());
-            $table->string('url');
+            $table->text('url');
             $table->string('creator');
             $table->integer('created_t');
             $table->integer('last_modified_t');
             $table->string('product_name');
             $table->string('quantity');
             $table->string('brands');
-            $table->string('categories');
+            $table->text('categories');
             $table->string('labels');
             $table->string('cities')->nullable();
             $table->string('purchase_places');
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->decimal('nutriscore_score');
             $table->string('nutriscore_grade');
             $table->string('main_category');
-            $table->string('image_url');
+            $table->text('image_url');
         });
     }
 

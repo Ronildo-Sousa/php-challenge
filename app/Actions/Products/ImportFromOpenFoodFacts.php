@@ -19,19 +19,24 @@ class ImportFromOpenFoodFacts
     {
         $this->getFileNames();
 
-        foreach ($this->fileNames as $key => $fileName) {
+        $jobs = [];
+        foreach ($this->fileNames as $fileName) {
             $streamPath = $this->baseUrl . $fileName . '.json.gz';
-
-            Bus::batch([
-                [
-                    new DowloadProductsJob($streamPath, $fileName . '.zip'),
-                    new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'), 10)
-                ]
-            ])->name("#$key Import-product")
-                ->catch(function (Batch $batch, Throwable $e) {
-                    // disparar email
-                })->dispatch();
+            $jobs[] = [
+                new DowloadProductsJob($streamPath, $fileName . '.zip'),
+                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'))
+            ];
         }
+
+        Bus::batch($jobs)->name("Import-products")
+            ->finally(function (Batch $batch) {
+                //enviar email para admins
+                info('success');
+            })
+            ->catch(function (Batch $batch, Throwable $e) {
+                //enviar email para admins
+                info($e->getMessage());
+            })->dispatch();
     }
 
     private function getFileNames()
