@@ -62,7 +62,7 @@ class CronJobNotification extends Notification implements ShouldQueue
     public function withDelay($notifiable)
     {
         return [
-            'mail' => now()->addMinute(),
+            'mail' => now()->addSeconds(30),
         ];
     }
 }

@@ -23,10 +23,10 @@ class ImportFromOpenFoodFacts
 
         $jobs = [];
         foreach ($this->fileNames as $fileName) {
-            $streamPath = $this->baseUrl . $fileName . '1.json.gz';
+            $streamPath = $this->baseUrl . $fileName . '.json.gz';
             $jobs[] = [
                 new DowloadProductsJob($streamPath, $fileName . '.zip'),
-                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '1.zip'))
+                new ImportProductsJob(base_path('/Cron/Products/' . $fileName . '.zip'))
             ];
         }
 
