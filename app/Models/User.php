@@ -23,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin'
+        'is_admin',
+        'api_key'
     ];
 
     /**
@@ -54,5 +55,13 @@ class User extends Authenticatable
     public function scopeAdmin(Builder $query): Builder
     {
         return $query->where('is_admin', true);
+    }
+
+    public function handleTokens(): string
+    {
+        if($this->tokens->count() > 0){
+            $this->tokens()->delete();
+        }
+        return $this->createToken($this->email)->plainTextToken;
     }
 }
