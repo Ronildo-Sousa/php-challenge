@@ -4,6 +4,7 @@ namespace Tests\Feature\Products;
 
 use App\Enums\ProductStatus;
 use App\Models\Product;
+use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -12,6 +13,7 @@ class UpdateProductTest extends TestCase
     /** @test */
     public function it_should_be_able_to_edit_a_product()
     {
+        $user = User::factory()->create();
         $product = Product::factory()->create();
 
         $response = $this->putJson(route('api.products.update', [
@@ -35,6 +37,7 @@ class UpdateProductTest extends TestCase
             'nutriscore_grade' => 'updated-value',
             'main_category' => 'updated-value',
             'image_url' => 'http://some-value.com',
+            'api_key' => $user->api_key
         ]));
 
         $response->assertStatus(Response::HTTP_OK)
