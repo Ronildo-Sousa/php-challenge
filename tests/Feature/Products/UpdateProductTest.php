@@ -5,11 +5,14 @@ namespace Tests\Feature\Products;
 use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class UpdateProductTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function it_should_be_able_to_edit_a_product()
     {

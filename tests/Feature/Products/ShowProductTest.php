@@ -4,11 +4,14 @@ namespace Tests\Feature\Products;
 
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ShowProductTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function it_shows_the_product_information_based_in_a_product_code()
     {

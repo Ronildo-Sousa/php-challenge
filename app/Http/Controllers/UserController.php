@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Users\CreateUser;
 use App\Entities\UserDTO;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,22 +12,6 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         //
-    }
-
-    public function store(Request $request): JsonResponse
-    {
-        $user = CreateUser::run(UserDTO::from($request));
-        return response()->json([
-            'user' => $user
-        ], Response::HTTP_CREATED);
-    }
-
-    public function storeAdmin(Request $request): JsonResponse
-    {
-        $user = CreateUser::run(UserDTO::from($request), true);
-        return response()->json([
-            'user' => $user
-        ], Response::HTTP_CREATED);
     }
 
     public function show($id): JsonResponse
